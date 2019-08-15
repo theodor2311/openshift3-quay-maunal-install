@@ -1,9 +1,11 @@
-  apiVersion: v1
-  kind: Route
-  metadata:
-    name: quay-enterprise
-    namespace: quay-enterprise
-  spec:
-    to:
-      kind: Service
-      name: quay-enterprise-clusterip
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: quay-enterprise
+spec:
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: quay-enterprise-clusterip
+    weight: 100
