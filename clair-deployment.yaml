@@ -1,0 +1,56 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: quay-enterprise
+  name: clair
+  labels:
+    quay-enterprise-component: clair
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        quay-enterprise-component: clair
+    spec:
+      containers:
+      - image: quay.io/redhat/clair-jwt:v3.0.4
+        imagePullPolicy: IfNotPresent
+        name: clair
+        ports:
+        - containerPort: 6060
+          protocol: TCP
+        - containerPort: 6061
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /clair/config/config.yaml
+          name: clair-config
+          subPath: config.yaml
+        - mountPath: /clair/config/security_scanner.pem
+          name: security-scanner
+          subPath: security_scanner.pem
+        - mountPath: /etc/pki/ca-trust/source/anchors/ca.crt
+          name: clair-trust-ca
+          subPath: ca.crt
+      imagePullSecrets:
+      - name: redhat-pull-secret
+      volumes:
+      - name: clair-config
+        projected:
+          defaultMode: 420
+          sources:
+          - secret:
+              name: clair-config-secret
+      - name: security-scanner
+        projected:
+          defaultMode: 420
+          sources:
+          - secret:
+              name: security-scanner-key-secret
+      - name: clair-trust-ca
+        projected:
+          defaultMode: 420
+          sources:
+          - secret:
+              name: clair-trust-ca-secret
