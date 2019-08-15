@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: quay-enterprise
+  name: clair-clusterip
+spec:
+  type: ClusterIP
+  ports:
+  - name: 6060-tcp
+    port: 6060
+    protocol: TCP
+    targetPort: 6060
+  - name: 6061-tcp
+    port: 6061
+    protocol: TCP
+    targetPort: 6061
+  selector:
+    quay-enterprise-component: clair
