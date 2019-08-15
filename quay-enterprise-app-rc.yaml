@@ -19,7 +19,7 @@ spec:
       volumes:
         - name: configvolume
           secret:
-            secretName: quay-enterprise-secret
+            secretName: quay-enterprise-config-secret
       containers:
       - name: quay-enterprise-app
         image: quay.io/redhat/quay:v3.0.4
