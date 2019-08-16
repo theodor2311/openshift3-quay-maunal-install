@@ -24,30 +24,33 @@ spec:
           protocol: TCP
         resources: {}
         volumeMounts:
-        - mountPath: /clair/config/config.yaml
-          name: clair-config
-          subPath: config.yaml
-        - mountPath: /clair/config/security_scanner.pem
-          name: security-scanner
-          subPath: security_scanner.pem
+        - mountPath: /clair/config
+          name: configvolume
         - mountPath: /etc/pki/ca-trust/source/anchors/ca.crt
           name: clair-trust-ca
           subPath: ca.crt
+      dnsPolicy: ClusterFirst
       imagePullSecrets:
       - name: redhat-pull-secret
+      restartPolicy: Always		
+      schedulerName: default-scheduler		
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
       volumes:
-      - name: clair-config
+      - name: configvolume
         projected:
           defaultMode: 420
           sources:
           - secret:
-              name: clair-config-secret
-      - name: security-scanner
-        projected:
-          defaultMode: 420
-          sources:
-          - secret:
+              items:
+              - key: security_scanner.pem
+                path: security_scanner.pem
               name: security-scanner-key-secret
+          - configMap:
+              items:
+              - key: config.yaml
+                path: config.yaml
+              name: clair-config-secret
       - name: clair-trust-ca
         projected:
           defaultMode: 420
