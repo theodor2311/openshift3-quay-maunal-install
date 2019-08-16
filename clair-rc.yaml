@@ -46,7 +46,7 @@ spec:
               - key: security_scanner.pem
                 path: security_scanner.pem
               name: security-scanner-key-secret
-          - configMap:
+          - secret:
               items:
               - key: config.yaml
                 path: config.yaml
