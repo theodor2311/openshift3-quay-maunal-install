@@ -31,7 +31,7 @@ spec:
           subPath: ca.crt
       dnsPolicy: ClusterFirst
       imagePullSecrets:
-      - name: redhat-pull-secret
+      - name: redhat-quay-pull-secret
       restartPolicy: Always		
       schedulerName: default-scheduler		
       securityContext: {}
